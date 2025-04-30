@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -32,21 +33,34 @@ class LoginController extends Controller
 
         if ($user && Hash::check($validatedData['password'], $user->password)) {
             Auth::login($user);
-
-            $request->session()->put('userRole', $user->role);
+            session([
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'userRole' => $user->role,
+                'sesi' => $user->sesi,
+            ]);
 
             if ($user->role === 'admin') {
                 return redirect()->route('dashboard.index');
-            } elseif ($user->role === 'voter') {
+            }
+
+            $now = Carbon::now('Asia/Jakarta');
+
+            $sesiTime = Carbon::createFromFormat('H:i:s', session('sesi'), 'Asia/Jakarta');
+
+            $validTimeEnd = $sesiTime->copy()->addHours(2);
+
+            if ($now->between($sesiTime, $validTimeEnd)) {
                 return redirect()->route('voter.index');
             } else {
                 Auth::logout();
-                return back()->withErrors(['Peran pengguna tidak valid.'])->withInput(['email' => $user->email]);
+                return back()->withErrors(['Sesi tidak valid atau sudah lewat.'])->withInput(['email' => $user->email]);
             }
         }
 
         return back()->withErrors(['Periksa kembali email dan password yang anda masukkan.'])->withInput($request->only('email'));
     }
+
 
     public function logout(Request $request): RedirectResponse
     {

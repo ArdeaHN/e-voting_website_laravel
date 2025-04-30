@@ -63,8 +63,8 @@ class CandidateController extends Controller
         Candidate::create([
             'name' => $request->name,
             'picture' => $pictureName,
-            'vision' => $vision,
-            'mission' => $mission,
+            'vision' => $request->vision,
+            'mission' => $request->mission,
             'resume' => $resumeName,
             'election_number' => $request->election_number,
             'total_voter' => 0,
@@ -80,6 +80,7 @@ class CandidateController extends Controller
     {
         $candidates = Candidate::findOrFail($id);
         $pdfPath = storage_path('app/public/candidate-resumes/' . $candidates->resume);
+        
 
         if (!File::exists($pdfPath)) {
             abort(404);

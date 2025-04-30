@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('password');
             $table->enum('role', ['admin', 'voter'])->default('voter');
+            $table->time('sesi');
             $table->string('choice')->nullable();
             $table->timestamps();
         });
