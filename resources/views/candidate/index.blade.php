@@ -64,6 +64,9 @@
                                 <button class="btn btn-warning btn-sm btn-block mb-2" data-toggle="modal"
                                     data-target="#editCandidateModal" data-id="{{ $candidate->id }}"
                                     data-name="{{ $candidate->name }}"
+                                    data-vision="{{ $candidate->vision }}"
+                                    data-mission="{{ $candidate->mission }}"
+                                    data-name="{{ $candidate->name }}"
                                     data-election_number="{{ $candidate->election_number }}"
                                     data-picture="{{ $candidate->picture }}" data-resume="{{ $candidate->resume }}"
                                     aria-label="Edit Candidate {{ $candidate->name }}">
